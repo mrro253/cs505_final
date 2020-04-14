@@ -73,7 +73,7 @@ public class Launcher {
     private static void startServer() throws IOException {
 
         final ResourceConfig rc = new ResourceConfig()
-        .packages("cs505cep.httpcontrollers")
+        .packages("cs505pubsubcep.httpcontrollers")
         .register(AuthenticationFilter.class);
 
         System.out.println("Starting Web Server...");
