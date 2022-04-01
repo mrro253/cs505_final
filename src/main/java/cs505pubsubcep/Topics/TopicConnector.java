@@ -29,10 +29,10 @@ public class TopicConnector {
 
         try {
 
-            String hostname = "128.163.202.50";
-            String username = "student";
-            String password = "student01";
-            String virtualhost = "patient_feed";
+            String hostname = "";
+            String username = "";
+            String password = "";
+            String virtualhost = "";
 
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(hostname);
