@@ -1,7 +1,7 @@
 package cs505pubsubcep.Topics;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -16,7 +16,8 @@ import java.util.Map;
 public class TopicConnector {
 
     private Gson gson;
-    final Type typeOf = new TypeToken<List<Map<String,String>>>(){}.getType();
+    //final Type typeOf = new TypeToken<List<Map<String,String>>>(){}.getType();\
+    final Type typeListTestingData = new TypeToken<List<TestingData>>(){}.getType();
 
     private String EXCHANGE_NAME = "patient_data";
 
@@ -28,7 +29,7 @@ public class TopicConnector {
 
         try {
 
-            String hostname = "vcbumg2.cs.uky.edu";
+            String hostname = "128.163.202.50";
             String username = "student";
             String password = "student01";
             String virtualhost = "patient_feed";
@@ -52,14 +53,25 @@ public class TopicConnector {
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
                 String message = new String(delivery.getBody(), "UTF-8");
-                System.out.println(" [x] Received Batch'" +
+                System.out.println(" [x] Received Text Batch'" +
                         delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
 
-                List<Map<String,String>> incomingList = gson.fromJson(message, typeOf);
-                for(Map<String,String> map : incomingList) {
-                    System.out.println("INPUT CEP EVENT: " +  map);
-                    //Launcher.cepEngine.input(Launcher.inputStreamName, gson.toJson(map));
+                List<TestingData> incomingList = gson.fromJson(message,typeListTestingData);
+                for(TestingData testingData : incomingList) {
+                    System.out.println("*Java Class*");
+                    System.out.println("\ttesting_id = " + testingData.testing_id);
+                    System.out.println("\tpatient_name = " + testingData.patient_name);
+                    System.out.println("\tpatient_mrn = " + testingData.patient_mrn);
+                    System.out.println("\tpatient_zipcode = " + testingData.patient_zipcode);
+                    System.out.println("\tpatient_status = " + testingData.patient_status);
+                    System.out.println("\tcontact_list = " + testingData.contact_list);
+                    System.out.println("\tevent_list = " + testingData.event_list);
                 }
+                //List<Map<String,String>> incomingList = gson.fromJson(message, typeOf);
+                //for(Map<String,String> map : incomingList) {
+                //    System.out.println("INPUT CEP EVENT: " +  map);
+                    //Launcher.cepEngine.input(Launcher.inputStreamName, gson.toJson(map));
+                //}
                 System.out.println("");
                 System.out.println("");
 
