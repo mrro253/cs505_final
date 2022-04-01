@@ -14,7 +14,7 @@ import java.net.URI;
 
 public class Launcher {
 
-    public static final String API_SERVICE_KEY = "1234"; //Change this to your student id
+    //public static final String API_SERVICE_KEY = "1234"; //Change this to your student id
     public static final int WEB_PORT = 8082;
     public static String inputStreamName = null;
     public static long accessCount = -1;
@@ -25,9 +25,8 @@ public class Launcher {
 
     public static void main(String[] args) throws IOException {
 
-
+        /*
         System.out.println("Starting CEP...");
-        //Embedded database initialization
 
         cepEngine = new CEPEngine();
 
@@ -53,12 +52,14 @@ public class Launcher {
         System.out.println("CEP Started...");
 
 
+         */
+
         //starting Collector
         topicConnector = new TopicConnector();
         topicConnector.connect();
 
         //Embedded HTTP initialization
-        startServer();
+        //startServer();
 
 
         try {
@@ -73,8 +74,8 @@ public class Launcher {
     private static void startServer() throws IOException {
 
         final ResourceConfig rc = new ResourceConfig()
-        .packages("cs505pubsubcep.httpcontrollers")
-        .register(AuthenticationFilter.class);
+        .packages("cs505pubsubcep.httpcontrollers");
+        //.register(AuthenticationFilter.class);
 
         System.out.println("Starting Web Server...");
         URI BASE_URI = UriBuilder.fromUri("http://0.0.0.0/").port(WEB_PORT).build();
