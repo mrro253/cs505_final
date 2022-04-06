@@ -9,6 +9,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Launcher {
@@ -53,8 +55,15 @@ public class Launcher {
 
          */
 
-        //starting Collector
-        topicConnector = new TopicConnector();
+        //starting pateint_data collector
+        Map<String,String> patient_data_config = new HashMap<>();
+        patient_data_config.put("hostname","");
+        patient_data_config.put("username","");
+        patient_data_config.put("password","");
+        patient_data_config.put("virtualhost","");
+        patient_data_config.put("topicname","patient_list");
+
+        topicConnector = new TopicConnector(patient_data_config);
         topicConnector.connect();
 
         //Embedded HTTP initialization
