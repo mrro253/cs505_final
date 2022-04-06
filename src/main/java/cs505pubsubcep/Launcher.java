@@ -57,11 +57,11 @@ public class Launcher {
 
         //starting pateint_data collector
         Map<String,String> patient_data_config = new HashMap<>();
-        patient_data_config.put("hostname","");
+        patient_data_config.put("hostname",""); //Fill config for your team in
         patient_data_config.put("username","");
         patient_data_config.put("password","");
         patient_data_config.put("virtualhost","");
-        patient_data_config.put("topicname","patient_list");
+        patient_data_config.put("topicname","patient_list"); //Change for specific topic
 
         topicConnector = new TopicConnector(patient_data_config);
         topicConnector.connect();
