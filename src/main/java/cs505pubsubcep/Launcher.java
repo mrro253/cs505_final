@@ -56,19 +56,17 @@ public class Launcher {
          */
 
         //starting pateint_data collector
-        Map<String,String> patient_data_config = new HashMap<>();
-        patient_data_config.put("hostname",""); //Fill config for your team in
-        patient_data_config.put("username","");
-        patient_data_config.put("password","");
-        patient_data_config.put("virtualhost","");
-        patient_data_config.put("topicname","patient_list"); //Change for specific topic
+        Map<String,String> message_config = new HashMap<>();
+        message_config.put("hostname",""); //Fill config for your team in
+        message_config.put("username","");
+        message_config.put("password","");
+        message_config.put("virtualhost","");
 
-        topicConnector = new TopicConnector(patient_data_config);
+        topicConnector = new TopicConnector(message_config);
         topicConnector.connect();
 
         //Embedded HTTP initialization
         //startServer();
-
 
         try {
             while (true) {

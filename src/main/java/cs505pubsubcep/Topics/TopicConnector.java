@@ -32,60 +32,140 @@ public class TopicConnector {
 
         try {
 
-
+            //create connection factory, this can be used to create many connections
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(config.get("hostname"));
             factory.setUsername(config.get("username"));
             factory.setPassword(config.get("password"));
             factory.setVirtualHost(config.get("virtualhost"));
+
+            //create a connection, many channels can be created from a single connection
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
 
-            channel.exchangeDeclare(config.get("topicname"), "topic");
+            patientListChannel(channel);
+            hospitalListChannel(channel);
+            vaxListChannel(channel);
+
+        } catch (Exception ex) {
+            System.out.println("connect Error: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+}
+
+    private void patientListChannel(Channel channel) {
+        try {
+
+            System.out.println("Creating patient_list channel");
+
+            String topicName = "patient_list";
+
+            channel.exchangeDeclare(topicName, "topic");
             String queueName = channel.queueDeclare().getQueue();
 
-            channel.queueBind(queueName, config.get("topicname"), "#");
+            channel.queueBind(queueName, topicName, "#");
 
 
-            System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+            System.out.println(" [*] Paitent List Waiting for messages. To exit press CTRL+C");
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
-                if(config.get("topicname").equals("patient_list")) {
+                String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println(" [x] Received Patient List Batch'" +
+                        delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
 
-                    String message = new String(delivery.getBody(), "UTF-8");
-                    System.out.println(" [x] Received Text Batch'" +
-                            delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
-
-                    List<TestingData> incomingList = gson.fromJson(message, typeListTestingData);
-                    for (TestingData testingData : incomingList) {
-                        System.out.println("*Java Class*");
-                        System.out.println("\ttesting_id = " + testingData.testing_id);
-                        System.out.println("\tpatient_name = " + testingData.patient_name);
-                        System.out.println("\tpatient_mrn = " + testingData.patient_mrn);
-                        System.out.println("\tpatient_zipcode = " + testingData.patient_zipcode);
-                        System.out.println("\tpatient_status = " + testingData.patient_status);
-                        System.out.println("\tcontact_list = " + testingData.contact_list);
-                        System.out.println("\tevent_list = " + testingData.event_list);
-                    }
-                    //List<Map<String,String>> incomingList = gson.fromJson(message, typeOf);
-                    //for(Map<String,String> map : incomingList) {
-                    //    System.out.println("INPUT CEP EVENT: " +  map);
-                    //Launcher.cepEngine.input(Launcher.inputStreamName, gson.toJson(map));
-                    //}
-                    System.out.println("");
-                    System.out.println("");
-                } else {
-                    System.out.println("NO HANDLER FOR " + config.get("topicname") + " topic!");
+                List<TestingData> incomingList = gson.fromJson(message, typeListTestingData);
+                for (TestingData testingData : incomingList) {
+                    System.out.println("*Java Class*");
+                    System.out.println("\ttesting_id = " + testingData.testing_id);
+                    System.out.println("\tpatient_name = " + testingData.patient_name);
+                    System.out.println("\tpatient_mrn = " + testingData.patient_mrn);
+                    System.out.println("\tpatient_zipcode = " + testingData.patient_zipcode);
+                    System.out.println("\tpatient_status = " + testingData.patient_status);
+                    System.out.println("\tcontact_list = " + testingData.contact_list);
+                    System.out.println("\tevent_list = " + testingData.event_list);
                 }
+                //List<Map<String,String>> incomingList = gson.fromJson(message, typeOf);
+                //for(Map<String,String> map : incomingList) {
+                //    System.out.println("INPUT CEP EVENT: " +  map);
+                //Launcher.cepEngine.input(Launcher.inputStreamName, gson.toJson(map));
+                //}
+                System.out.println("");
+                System.out.println("");
 
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
             });
+
         } catch (Exception ex) {
+            System.out.println("patientListChannel Error: " + ex.getMessage());
             ex.printStackTrace();
         }
-}
+    }
+
+    private void hospitalListChannel(Channel channel) {
+        try {
+
+            String topicName = "hospital_list";
+
+            System.out.println("Creating hospital_list channel");
+
+            channel.exchangeDeclare(topicName, "topic");
+            String queueName = channel.queueDeclare().getQueue();
+
+            channel.queueBind(queueName, topicName, "#");
+
+
+            System.out.println(" [*] Hospital List Waiting for messages. To exit press CTRL+C");
+
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+
+                String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println(" [x] Received Hospital List Batch'" +
+                        delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
+
+            };
+
+            channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
+            });
+
+        } catch (Exception ex) {
+            System.out.println("hospitalListChannel Error: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    private void vaxListChannel(Channel channel) {
+        try {
+
+            String topicName = "vax_list";
+
+            System.out.println("Creating vax_list channel");
+
+            channel.exchangeDeclare(topicName, "topic");
+            String queueName = channel.queueDeclare().getQueue();
+
+            channel.queueBind(queueName, topicName, "#");
+
+
+            System.out.println(" [*] Vax List Waiting for messages. To exit press CTRL+C");
+
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+
+                String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println(" [x] Received Vax Batch'" +
+                        delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
+
+            };
+
+            channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
+            });
+
+        } catch (Exception ex) {
+            System.out.println("vaxListChannel Error: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
 
 }

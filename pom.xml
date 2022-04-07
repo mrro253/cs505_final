@@ -19,6 +19,8 @@
         <maven.javadoc.version>2.10.3</maven.javadoc.version>
         <maven.compiler.version>3.5.1</maven.compiler.version>
         <siddhi.version>5.1.11</siddhi.version>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
     </properties>
 
 
