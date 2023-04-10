@@ -58,6 +58,7 @@ public class Launcher {
         //starting pateint_data collector
         Map<String,String> message_config = new HashMap<>();
         message_config.put("hostname",""); //Fill config for your team in
+        message_config.put("port",""); //
         message_config.put("username","");
         message_config.put("password","");
         message_config.put("virtualhost","");

@@ -35,6 +35,7 @@ public class TopicConnector {
             //create connection factory, this can be used to create many connections
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost(config.get("hostname"));
+            factory.setPort(Integer.parseInt(config.get("port")));
             factory.setUsername(config.get("username"));
             factory.setPassword(config.get("password"));
             factory.setVirtualHost(config.get("virtualhost"));
