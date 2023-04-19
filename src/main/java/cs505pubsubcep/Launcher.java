@@ -2,6 +2,8 @@ package cs505pubsubcep;
 
 import cs505pubsubcep.CEP.CEPEngine;
 import cs505pubsubcep.Topics.TopicConnector;
+import cs505pubsubcep.database.Database;
+
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -23,15 +25,17 @@ public class Launcher {
     public static TopicConnector topicConnector;
 
     public static CEPEngine cepEngine = null;
+    public static Database db;
 
     public static void main(String[] args) throws IOException {
 
         System.out.println("Starting CEP...");
 
         cepEngine = new CEPEngine();
+        db = new Database();
 
 
-        //START MODIFY
+        // START MODIFY
         inputStreamName = "PatientInStream";
         String inputStreamAttributesString = "first_name string, last_name string, mrn string, zip_code string, patient_status_code string";
 
@@ -45,12 +49,11 @@ public class Launcher {
                 "group by patient_status_code " +
                 "insert into PatientOutStream; ";
 
-        //END MODIFY
+        // END MODIFY
 
         cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
 
         System.out.println("CEP Started...");
-
 
 
         //starting pateint_data collector

@@ -7,6 +7,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import cs505pubsubcep.Launcher;
+import cs505pubsubcep.database.Database;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -17,11 +18,13 @@ import java.util.Map;
 public class TopicConnector {
 
     private Gson gson;
+    private int patientBatchCount = 0;
     //final Type typeOf = new TypeToken<List<Map<String,String>>>(){}.getType();\
     final Type typeListTestingData = new TypeToken<List<TestingData>>(){}.getType();
     final Type typeListHospitalData = new TypeToken<List<HospitalData>>(){}.getType();
     final Type typeListVaxData = new TypeToken<List<VaxData>>(){}.getType();
 
+    Database db = new Database();
     //private String EXCHANGE_NAME = "patient_data";
     Map<String,String> config;
 
@@ -72,13 +75,21 @@ public class TopicConnector {
             System.out.println(" [*] Paitent List Waiting for messages. To exit press CTRL+C");
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-
+                patientBatchCount++;
                 String message = new String(delivery.getBody(), "UTF-8");
                 System.out.println(" [x] Received Patient List Batch'" +
                         delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
+                
 
                 List<TestingData> incomingList = gson.fromJson(message, typeListTestingData);
                 for (TestingData testingData : incomingList) {
+                    Patient patient = new Patient(testingData.testing_id,
+                                    testingData.patient_name,
+                                    testingData.patient_mrn,
+                                    testingData.patient_zipcode,
+                                    testingData.patient_status,
+                                    testingData.contact_list,
+                                    testingData.event_list);
                     System.out.println("*Java Class*");
                     System.out.println("\ttesting_id = " + testingData.testing_id);
                     System.out.println("\tpatient_name = " + testingData.patient_name);
@@ -87,6 +98,11 @@ public class TopicConnector {
                     System.out.println("\tpatient_status = " + testingData.patient_status);
                     System.out.println("\tcontact_list = " + testingData.contact_list);
                     System.out.println("\tevent_list = " + testingData.event_list);
+                    db.addPatient(patient, patientBatchCount);
+                    List<String> counts = db.getZipCodeCounts(patientBatchCount);
+                    if (counts != null && !counts.isEmpty()) {
+                        System.out.println("NOT NULL NOR EMPTY......");
+                    }
                 }
                 //List<Map<String,String>> incomingList = gson.fromJson(message, typeOf);
                 //for(Map<String,String> map : incomingList) {
