@@ -16,7 +16,6 @@ public class CEPEngine {
     private SiddhiAppRuntime siddhiAppRuntime;
     private Map<String,String> topicMap;
 
-
     private Gson gson;
 
     public CEPEngine() {

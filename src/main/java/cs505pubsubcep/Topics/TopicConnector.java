@@ -19,6 +19,8 @@ public class TopicConnector {
     private Gson gson;
     //final Type typeOf = new TypeToken<List<Map<String,String>>>(){}.getType();\
     final Type typeListTestingData = new TypeToken<List<TestingData>>(){}.getType();
+    final Type typeListHospitalData = new TypeToken<List<HospitalData>>(){}.getType();
+    final Type typeListVaxData = new TypeToken<List<VaxData>>(){}.getType();
 
     //private String EXCHANGE_NAME = "patient_data";
     Map<String,String> config;
@@ -126,6 +128,17 @@ public class TopicConnector {
                 System.out.println(" [x] Received Hospital List Batch'" +
                         delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
 
+                List<HospitalData> incomingList = gson.fromJson(message, typeListHospitalData);
+                for (HospitalData hospitalData : incomingList) {
+                    System.out.println("*Java Class*");
+                    System.out.println("\thospital_id = " + hospitalData.hospital_id);
+                    System.out.println("\tpatient_name = " + hospitalData.patient_name);
+                    System.out.println("\tpatient_mrn = " + hospitalData.patient_mrn);
+                    System.out.println("\tpatient_status = " + hospitalData.patient_status);
+                }
+                System.out.println("");
+                System.out.println("");
+
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
@@ -158,6 +171,15 @@ public class TopicConnector {
                 System.out.println(" [x] Received Vax Batch'" +
                         delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
 
+                List<VaxData> incomingList = gson.fromJson(message, typeListVaxData);
+                for (VaxData vaxData : incomingList) {
+                    System.out.println("*Java Class*");
+                    System.out.println("\tvaccination_id = " + vaxData.vaccination_id);
+                    System.out.println("\tpatient_name = " + vaxData.patient_name);
+                    System.out.println("\tpatient_mrn = " + vaxData.patient_mrn);
+                }
+                System.out.println("");
+                System.out.println("");
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {

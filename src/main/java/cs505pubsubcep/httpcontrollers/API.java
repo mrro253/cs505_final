@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,6 +73,106 @@ public class API {
             String exceptionAsString = sw.toString();
             ex.printStackTrace();
 
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+    @GET
+    @Path("/getteam")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTeam(@HeaderParam("X-Auth-API-Key") String authKey) {
+        String responseString = "{}";
+        try {
+            Map<String,Object> responseMap = new HashMap<>();
+            responseMap.put("team_name", "ContactTracingTitans");
+            responseMap.put("team_member_sids", Arrays.asList(12352407, 12402867, 12292147));
+            responseMap.put("app_status_code", Launcher.isAppOnline() ? 1 : 0);
+            responseString = gson.toJson(responseMap);
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/reset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetData() {
+        String responseString = "{}";
+        try {
+
+            boolean resetSuccessful = Launcher.resetData(); // replace with actual method to reset data
+
+            Map<String,Object> responseMap = new HashMap<>();
+            responseMap.put("reset_status_code", resetSuccessful ? 1 : 0);
+
+            responseString = gson.toJson(responseMap);
+
+        } catch (Exception ex) {
+
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/zipalertlist")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getZipAlertList(@HeaderParam("X-Auth-API-Key") String authKey) {
+        String responseString = "{}";
+        try {
+            List<Integer> alertZipCodes = new ArrayList<>();
+            Map<Integer, List<Integer>> zipCodeCounts = Launcher.cepEngine.getZipCodeCounts();
+            for (int zipCode : zipCodeCounts.keySet()) {
+                List<Integer> counts = zipCodeCounts.get(zipCode);
+                if (counts.size() >= 2 && counts.get(counts.size() - 1) >= 2 * counts.get(counts.size() - 2)) {
+                    alertZipCodes.add(zipCode);
+                }
+            }
+            Map<String, List<Integer>> responseMap = new HashMap<>();
+            responseMap.put("ziplist", alertZipCodes);
+            responseString = gson.toJson(responseMap);
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/alertlist")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStateAlertList(@HeaderParam("X-Auth-API-Key") String authKey) {
+        String responseString = "{}";
+        try {
+            List<Integer> alertZipCodes = new ArrayList<>();
+            Map<Integer, List<Integer>> zipCodeCounts = Launcher.cepEngine.getZipCodeCounts();
+            for (int zipCode : zipCodeCounts.keySet()) {
+                List<Integer> counts = zipCodeCounts.get(zipCode);
+                if (counts.size() >= 2 && counts.get(counts.size() - 1) >= 2 * counts.get(counts.size() - 2)) {
+                    alertZipCodes.add(zipCode);
+                }
+            }
+            Map<String, Integer> responseMap = new HashMap<>();
+            responseMap.put("state_status", alertZipCodes.size() >= 5 ? 1 : 0);
+            responseString = gson.toJson(responseMap);
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
             return Response.status(500).entity(exceptionAsString).build();
         }
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
