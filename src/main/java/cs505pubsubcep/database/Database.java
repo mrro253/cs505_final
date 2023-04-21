@@ -127,4 +127,23 @@ public class Database {
             return null;
         }
     }
+
+    // WIP
+    public List<String> getContacts() {
+        List<String> contactList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM patients;"))
+        {
+            while (rs.next()) {
+                int contactNumber = rs.getInt("patient_mrn");
+                contactList.add(Integer.toString(contactNumber));
+            }
+        updateAlertState();
+        return contactList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
