@@ -59,8 +59,8 @@ public class Launcher {
 
         //starting pateint_data collector
         Map<String,String> message_config = new HashMap<>();
-        message_config.put("hostname","jwco247.cs.uky.edu"); //Fill config for your team in
-        message_config.put("port","9999"); //
+        message_config.put("hostname","vbu231.cs.uky.edu"); //Fill config for your team in
+        message_config.put("port","9099"); //
         message_config.put("username","team_6");
         message_config.put("password","myPassCS505");
         message_config.put("virtualhost","6");
@@ -95,6 +95,15 @@ public class Launcher {
             System.out.println("Web Server Started...");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static int isAppOnline() {
+        int check = topicConnector.isOnline();
+        if (check == 1) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 

@@ -129,7 +129,7 @@ public class Database {
     }
 
     // WIP
-    public List<String> getContacts() {
+    public List<String> getContacts(int mrn) {
         List<String> contactList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmt = conn.createStatement();
