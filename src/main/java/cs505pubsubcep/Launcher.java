@@ -59,8 +59,8 @@ public class Launcher {
 
         //starting pateint_data collector
         Map<String,String> message_config = new HashMap<>();
-        message_config.put("hostname","vbu231.cs.uky.edu"); //Fill config for your team in
-        message_config.put("port","9099"); //
+        message_config.put("hostname","jwco247.cs.uky.edu"); //Fill config for your team in
+        message_config.put("port","9999"); //
         message_config.put("username","team_6");
         message_config.put("password","myPassCS505");
         message_config.put("virtualhost","6");
