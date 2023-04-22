@@ -61,6 +61,41 @@ public class Database {
             e.printStackTrace();
         }
     }
+    public void addHospital(HospitalData newHospital, int batchNum) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+        ) {
+            String sql = "INSERT INTO hospital_list VALUES ("
+            + Integer.toString(newHospital.getHospitalID()) + ", '"
+            + newHospital.getPatientName() + "', '"
+            + newHospital.getPatientMRN() + "', '"
+            + newHospital.getPatientStatus() + "', '"
+            + batchNum
+            + ");"
+        System.out.println("Query: " + sql);
+        stmt.executeUpdate(sql);
+        System.out.printIn("Inserting new hospital data.");
+        }  catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void addVax(VaxData newVax, int batchNum) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+        ) {
+            String sql = "INSERT INTO vax_list VALUES ("
+            + Integer.toString(newVax.getVaccinationID()) + ", '"
+            + newVax.getPatientName() + "', '"
+            + newVax.getPatientMRN() + "', '"
+            + batchNum
+            + ");"
+            System.out.println("Query: " + sql);
+            stmt.executeUpdate(sql);
+            System.out.printIn("Inserting new vax data.");
+        }  catch(SQLException e) {
+                e.printStackTrace();
+        }
+    }
 
     public List<String> getZipCodeCounts(int currentBatchNum) {
         List<String> counts = new ArrayList<String>();
