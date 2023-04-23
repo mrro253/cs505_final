@@ -229,8 +229,8 @@ public class API {
             return Response.status(500).entity(exceptionAsString).build();
             }
 
-        }
     }
+    
 
     @GET
     @Path("/patientstatus/")
@@ -298,9 +298,9 @@ public class API {
 
 
 
-        }
     }
 }
+
 
     // @GET
     // @Path("/getaccesscount")
@@ -338,6 +338,3 @@ public class API {
     //     }
     //     return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     // }
-
-
-    
