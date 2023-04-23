@@ -169,7 +169,7 @@ public class Database {
         List<Integer> vaxList = new ArrayList<Integer>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM vax_list WHERE patient_status=1;"))
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM vax_list;"))
         {
             while (rs.next()) {
                 int vaxPatient = rs.getInt("patient_mrn");
@@ -188,6 +188,40 @@ public class Database {
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE hospital_id=" + hospital_id + " AND patient_status=1;"))
+        {
+            while (rs.next()) {
+                int patients = rs.getInt("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<Integer> getPatientsStatus2(int hospital_id) {
+        List<Integer> patientList = new ArrayList<Integer>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE hospital_id=" + hospital_id + " AND patient_status=2;"))
+        {
+            while (rs.next()) {
+                int patients = rs.getInt("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<Integer> getPatientsStatus3(int hospital_id) {
+        List<Integer> patientList = new ArrayList<Integer>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE hospital_id=" + hospital_id + " AND patient_status=3;"))
         {
             while (rs.next()) {
                 int patients = rs.getInt("patient_mrn");

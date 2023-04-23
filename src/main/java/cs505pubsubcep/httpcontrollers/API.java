@@ -172,22 +172,51 @@ public class API {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getVaxPatients( @PathParam("mrn") int mrn) {
         try {
-            List<Integer> patients = db.getPatientsStatus1(mrn);
-            List<Integer> vaxPatients = db.getVaxPatientStatus1();
-            double total = 0.00;
-            for (int i = 0; i < vaxPatients.size(); i++) {
-                for (int j = 0; i < patients.size(); j++) {
-                    if (vaxPatients.get(i) == patients.get(i)) {
-                        total = total + 1;
-                    }  
-                }
-            }
-            
-            if (patients != null && vaxPatients != null) {
+            List<Integer> patients1 = db.getPatientsStatus1(mrn);
+            List<Integer> patients2 = db.getPatientsStatus2(mrn);
+            List<Integer> patients3 = db.getPatientsStatus3(mrn);
+            List<Integer> vaxPatients1 = db.getVaxPatientStatus1();
+            double total1 = 0.00;
+            double total2 = 0.00;
+            double total3 = 0.00;
+            if (patients1 != null && vaxPatients1 != null) {
                 Map<String, Object> responseMap = new HashMap<>();
+            
+                for (int i = 0; i < patients1.size(); i++) {
+                    for (int j = 0; i < vaxPatients1.size(); j++) {
+                        if (vaxPatients1.get(i) == patients1.get(i)) {
+                            total1 = total1 + 1;
+                        }  
+                    }
+                }
+                for (int i = 0; i < patients2.size(); i++) {
+                    for (int j = 0; i < vaxPatients1.size(); j++) {
+                        if (vaxPatients1.get(i) == patients2.get(i)) {
+                            total2 = total2 + 1;
+                        }  
+                    }
+                }
+                for (int i = 0; i < patients3.size(); i++) {
+                    for (int j = 0; i < vaxPatients1.size(); j++) {
+                        if (vaxPatients1.get(i) == patients3.get(i)) {
+                            total3 = total3 + 1;
+                        }  
+                    }
+                }
+
+
             }
+            } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+            return Response.status(500).entity(exceptionAsString).build();
+            }
+
         }
     }
+}
 
     // @GET
     // @Path("/getaccesscount")
@@ -227,4 +256,4 @@ public class API {
     // }
 
 
-}
+    
