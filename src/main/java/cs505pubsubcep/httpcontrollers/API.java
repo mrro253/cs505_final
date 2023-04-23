@@ -177,7 +177,7 @@ public class API {
             List<String> contactList = db.getContacts(mrn);
             if (contactList != null) {
                 Map<String, Object> responseMap = new HashMap<>();
-                responseMap.put("contactlist", 1);
+                responseMap.put("contactlist", contactList);
                 return Response.ok(gson.toJson(responseMap)).build();
             } else {
                 Map<String, Object> responseMap = new HashMap<>();

@@ -133,11 +133,11 @@ public class Database {
         List<String> contactList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM patients;"))
+            ResultSet rs = stmt.executeQuery("SELECT contact_list FROM patient_list WHERE patient_mrn=" + mrn + ";");)
         {
             while (rs.next()) {
-                int contactNumber = rs.getInt("patient_mrn");
-                contactList.add(Integer.toString(contactNumber));
+                String contactNumber = rs.getString("patient_mrn");
+                contactList.add(contactNumber);
             }
         updateAlertState();
         return contactList;
