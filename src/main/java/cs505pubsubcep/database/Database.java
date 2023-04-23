@@ -234,5 +234,57 @@ public class Database {
             return null;
         }
     }
+    public List<Integer> getPatientsStatusTotal1() {
+        List<Integer> patientList = new ArrayList<Integer>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=3;"))
+        {
+            while (rs.next()) {
+                int patients = rs.getInt("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<Integer> getPatientsStatusTotal2() {
+        List<Integer> patientList = new ArrayList<Integer>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=3;"))
+        {
+            while (rs.next()) {
+                int patients = rs.getInt("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<Integer> getPatientsStatusTotal3() {
+        List<Integer> patientList = new ArrayList<Integer>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list AND patient_status=3;"))
+        {
+            while (rs.next()) {
+                int patients = rs.getInt("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
 }
 
