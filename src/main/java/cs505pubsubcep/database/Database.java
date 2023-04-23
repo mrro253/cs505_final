@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.*;
 
 import cs505pubsubcep.Topics.Patient;
+import cs505pubsubcep.Topics.HospitalData;
+import cs505pubsubcep.Topics.VaxData;
 
 public class Database {
     static final String DB_URL = "jdbc:mysql://localhost:3306/cs505final";
@@ -71,7 +73,7 @@ public class Database {
             + newHospital.getPatientMRN() + "', '"
             + newHospital.getPatientStatus() + "', '"
             + batchNum
-            + ");"
+            + ");";
         System.out.println("Query: " + sql);
         stmt.executeUpdate(sql);
         System.out.printIn("Inserting new hospital data.");
@@ -88,7 +90,7 @@ public class Database {
             + newVax.getPatientName() + "', '"
             + newVax.getPatientMRN() + "', '"
             + batchNum
-            + ");"
+            + ");";
             System.out.println("Query: " + sql);
             stmt.executeUpdate(sql);
             System.out.printIn("Inserting new vax data.");

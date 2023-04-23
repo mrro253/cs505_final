@@ -7,12 +7,13 @@ public class HospitalData {
     public String patient_mrn;
     public int patient_status;
 
-    public  HospitalData(int hospital_id2, String patient_name2, String patient_mrn, int patient_status)) {
+    public  HospitalData(int hospital_id2, String patient_name2, String patient_mrn2, int patient_status2)) {
         hospital_id = hospital_id2;
         patient_mrn = patient_mrn2;
         patient_name = patient_name2;
         patient_status = patient_status2;
     }
+    
     public int getHospitalID() {
         return hospital_id;
     }
