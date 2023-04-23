@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+import javax.ws.rs.PathParam;;
 
 @Path("/api")
 public class API {
@@ -163,6 +164,28 @@ public class API {
             String exceptionAsString = sw.toString();
             ex.printStackTrace();
             return Response.status(500).entity(exceptionAsString).build();
+        }
+    }
+
+    @GET
+    @Path("/getpatientstatus/{mrn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getVaxPatients( @PathParam("mrn") int mrn) {
+        try {
+            List<Integer> patients = db.getPatientsStatus1(mrn);
+            List<Integer> vaxPatients = db.getVaxPatientStatus1();
+            double total = 0.00;
+            for (int i = 0; i < vaxPatients.size(); i++) {
+                for (int j = 0; i < patients.size(); j++) {
+                    if (vaxPatients.get(i) == patients.get(i)) {
+                        total = total + 1;
+                    }  
+                }
+            }
+            
+            if (patients != null && vaxPatients != null) {
+                Map<String, Object> responseMap = new HashMap<>();
+            }
         }
     }
 
