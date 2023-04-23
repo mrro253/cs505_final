@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -87,7 +88,8 @@ public class API {
             Map<String,Object> responseMap = new HashMap<>();
             responseMap.put("team_name", "ContactTracingTitans");
             responseMap.put("team_member_sids", Arrays.asList(12352407, 12402867, 12292147));
-            // responseMap.put("app_status_code", Launcher.isAppOnline() ? 1 : 0);
+            int check = Launcher.isAppOnline();
+            responseMap.put("app_status_code", check);
             responseString = gson.toJson(responseMap);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
@@ -155,6 +157,31 @@ public class API {
             } else {
                 Map<String, Object> responseMap = new HashMap<>();
                 responseMap.put("state_status", 0);
+                return Response.ok(gson.toJson(responseMap)).build();
+            }
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+    }
+
+    // WIP
+    @GET
+    @Path("/getconfirmedcontacts/{mrn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConfirmedContactsList( @PathParam("mrn") int mrn ) {
+        try {
+            List<String> contactList = db.getContacts(mrn);
+            if (contactList != null) {
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("contactlist", contactList);
+                return Response.ok(gson.toJson(responseMap)).build();
+            } else {
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("contactlist", 0);
                 return Response.ok(gson.toJson(responseMap)).build();
             }
         } catch (Exception ex) {

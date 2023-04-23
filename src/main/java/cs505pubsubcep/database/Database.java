@@ -127,4 +127,23 @@ public class Database {
             return null;
         }
     }
+
+    // WIP
+    public List<String> getContacts(int mrn) {
+        List<String> contactList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT contact_list FROM patient_list WHERE patient_mrn=" + mrn + ";");)
+        {
+            while (rs.next()) {
+                String contactNumber = rs.getString("patient_mrn");
+                contactList.add(contactNumber);
+            }
+        updateAlertState();
+        return contactList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
