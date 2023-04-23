@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+import javax.ws.rs.PathParam;;
 
 @Path("/api")
 public class API {
@@ -168,6 +169,69 @@ public class API {
         }
     }
 
+    @GET
+    @Path("/getpatientstatus/{mrn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getVaxPatients( @PathParam("mrn") int mrn) {
+        try {
+            List<Integer> patients1 = db.getPatientsStatus1(mrn);
+            List<Integer> patients2 = db.getPatientsStatus2(mrn);
+            List<Integer> patients3 = db.getPatientsStatus3(mrn);
+            List<Integer> vaxPatients1 = db.getVaxPatientStatus1();
+            double total1 = 0.00;
+            double total2 = 0.00;
+            double total3 = 0.00;
+            if (patients1 != null && vaxPatients1 != null) {
+                Map<String, Object> responseMap = new HashMap<>();
+            
+                for (int i = 0; i < patients1.size(); i++) {
+                    for (int j = 0; i < vaxPatients1.size(); j++) {
+                        if (vaxPatients1.get(i) == patients1.get(i)) {
+                            total1 = total1 + 1;
+                        }  
+                    }
+                }
+                for (int i = 0; i < patients2.size(); i++) {
+                    for (int j = 0; i < vaxPatients1.size(); j++) {
+                        if (vaxPatients1.get(i) == patients2.get(i)) {
+                            total2 = total2 + 1;
+                        }  
+                    }
+                }
+                for (int i = 0; i < patients3.size(); i++) {
+                    for (int j = 0; i < vaxPatients1.size(); j++) {
+                        if (vaxPatients1.get(i) == patients3.get(i)) {
+                            total3 = total3 + 1;
+                        }  
+                    }
+                }
+                double percent1 = 0.00;
+                double percent2 = 0.00;
+                double percent3 = 0.00;
+                int count1 = patients1.size();
+                int count2 = patients2.size();
+                int count3 = patients3.size();
+
+                percent1 = total1/patients1.size();
+                percent2 = total2/patients2.size();
+                percent3 = total3/patients3.size();
+                responseMap.put("in-patient_count", count1);
+                responseMap.put("in-patient_vax", percent1);
+                responseMap.put("icu-patient_count", count2);
+                responseMap.put("icu-patient_vax", percent2);
+                responseMap.put("in-patient_count", count3);
+                responseMap.put("in-patient_count", count3);
+                return Response.ok(gson.toJson(responseMap)).build();
+            }
+        } catch (Exception ex) {
+        StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+    }
+
     // WIP
     @GET
     @Path("/getconfirmedcontacts/{mrn}")
@@ -191,7 +255,78 @@ public class API {
             ex.printStackTrace();
             return Response.status(500).entity(exceptionAsString).build();
         }
+
     }
+    
+
+    @GET
+    @Path("/patientstatus/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllVax() {
+        try {
+            List<Integer> patients1 = db.getPatientsStatusTotal1();
+            List<Integer> patients2 = db.getPatientsStatusTotal2();
+            List<Integer> patients3 = db.getPatientsStatusTotal3();
+            List<Integer> vaxPatients1 = db.getVaxPatientStatus1();
+            double total1 = 0.00;
+            double total2 = 0.00;
+            double total3 = 0.00;
+            if (patients1 != null && vaxPatients1 != null) {
+                Map<String, Object> responseMap = new HashMap<>();
+            
+                for (int i = 0; i < patients1.size(); i++) {
+                    for (int j = 0; i < vaxPatients1.size(); j++) {
+                        if (vaxPatients1.get(i) == patients1.get(i)) {
+                            total1 = total1 + 1;
+                        }  
+                    }
+                }
+                for (int i = 0; i < patients2.size(); i++) {
+                    for (int j = 0; i < vaxPatients1.size(); j++) {
+                        if (vaxPatients1.get(i) == patients2.get(i)) {
+                            total2 = total2 + 1;
+                        }  
+                    }
+                }
+                for (int i = 0; i < patients3.size(); i++) {
+                    for (int j = 0; i < vaxPatients1.size(); j++) {
+                        if (vaxPatients1.get(i) == patients3.get(i)) {
+                            total3 = total3 + 1;
+                        }
+                    }
+                }
+                double percent1 = 0.00;
+                double percent2 = 0.00;
+                double percent3 = 0.00;
+                int count1 = patients1.size();
+                int count2 = patients2.size();
+                int count3 = patients3.size();
+
+                percent1 = total1/patients1.size();
+                percent2 = total2/patients2.size();
+                percent3 = total3/patients3.size();
+                responseMap.put("in-patient_count", count1);
+                responseMap.put("in-patient_vax", percent1);
+                responseMap.put("icu-patient_count", count2);
+                responseMap.put("icu-patient_vax", percent2);
+                responseMap.put("in-patient_count", count3);
+                responseMap.put("in-patient_count", count3);
+                return Response.ok(gson.toJson(responseMap)).build();
+            }
+        }
+            catch (Exception ex) {
+                StringWriter sw = new StringWriter();
+                ex.printStackTrace(new PrintWriter(sw));
+                String exceptionAsString = sw.toString();
+                ex.printStackTrace();
+                return Response.status(500).entity(exceptionAsString).build();
+            }
+    
+
+
+
+    }
+}
 
     @GET
     @Path("/getpossiblecontacts/{mrn}")
@@ -253,6 +388,3 @@ public class API {
     //     }
     //     return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     // }
-
-
-}
