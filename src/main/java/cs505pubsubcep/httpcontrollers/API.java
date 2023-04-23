@@ -193,6 +193,30 @@ public class API {
         }
     }
 
+    @GET
+    @Path("/getpossiblecontacts/{mrn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPossibleContactsList( @PathParam("mrn") int mrn ) {
+        try {
+            List<String> contactList = db.getContacts(mrn);
+            if (contactList != null) {
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("contactlist", contactList);
+                return Response.ok(gson.toJson(responseMap)).build();
+            } else {
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("contactlist", 0);
+                return Response.ok(gson.toJson(responseMap)).build();
+            }
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+    }
+
     // @GET
     // @Path("/getaccesscount")
     // @Produces(MediaType.APPLICATION_JSON)
