@@ -165,14 +165,14 @@ public class Database {
         }
     }
 
-    public List<Integer> getVaxPatientStatus1() {
-        List<Integer> vaxList = new ArrayList<Integer>();
+    public List<String> getVaxPatientStatus1() {
+        List<String> vaxList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM vax_list;"))
         {
             while (rs.next()) {
-                int vaxPatient = rs.getInt("patient_mrn");
+                String vaxPatient = rs.getString("patient_mrn");
                 vaxList.add((vaxPatient));
             }
             return vaxList;
@@ -183,14 +183,14 @@ public class Database {
         }
 
     }
-    public List<Integer> getPatientsStatus1(int hospital_id) {
-        List<Integer> patientList = new ArrayList<Integer>();
+    public List<String> getPatientsStatus1(int hospital_id) {
+        List<String> patientList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE hospital_id=" + hospital_id + " AND patient_status=1;"))
         {
             while (rs.next()) {
-                int patients = rs.getInt("patient_mrn");
+                String patients = rs.getString("patient_mrn");
                 patientList.add((patients));
             }
             return patientList;
@@ -200,14 +200,14 @@ public class Database {
             return null;
         }
     }
-    public List<Integer> getPatientsStatus2(int hospital_id) {
-        List<Integer> patientList = new ArrayList<Integer>();
+    public List<String> getPatientsStatus2(int hospital_id) {
+        List<String> patientList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE hospital_id=" + hospital_id + " AND patient_status=2;"))
         {
             while (rs.next()) {
-                int patients = rs.getInt("patient_mrn");
+                String patients = rs.getString("patient_mrn");
                 patientList.add((patients));
             }
             return patientList;
@@ -217,14 +217,14 @@ public class Database {
             return null;
         }
     }
-    public List<Integer> getPatientsStatus3(int hospital_id) {
-        List<Integer> patientList = new ArrayList<Integer>();
+    public List<String> getPatientsStatus3(int hospital_id) {
+        List<String> patientList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE hospital_id=" + hospital_id + " AND patient_status=3;"))
         {
             while (rs.next()) {
-                int patients = rs.getInt("patient_mrn");
+                String patients = rs.getString("patient_mrn");
                 patientList.add((patients));
             }
             return patientList;
@@ -234,14 +234,14 @@ public class Database {
             return null;
         }
     }
-    public List<Integer> getPatientsStatusTotal1() {
-        List<Integer> patientList = new ArrayList<Integer>();
+    public List<String> getPatientsStatusTotal1() {
+        List<String> patientList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=1;"))
         {
             while (rs.next()) {
-                int patients = rs.getInt("patient_mrn");
+                String patients = rs.getString("patient_mrn");
                 patientList.add((patients));
             }
             return patientList;
@@ -251,14 +251,14 @@ public class Database {
             return null;
         }
     }
-    public List<Integer> getPatientsStatusTotal2() {
-        List<Integer> patientList = new ArrayList<Integer>();
+    public List<String> getPatientsStatusTotal2() {
+        List<String> patientList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=2;"))
         {
             while (rs.next()) {
-                int patients = rs.getInt("patient_mrn");
+                String patients = rs.getString("patient_mrn");
                 patientList.add((patients));
             }
             return patientList;
@@ -268,14 +268,14 @@ public class Database {
             return null;
         }
     }
-    public List<Integer> getPatientsStatusTotal3() {
-        List<Integer> patientList = new ArrayList<Integer>();
+    public List<String> getPatientsStatusTotal3() {
+        List<String> patientList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=3;"))
         {
             while (rs.next()) {
-                int patients = rs.getInt("patient_mrn");
+                String patients = rs.getString("patient_mrn");
                 patientList.add((patients));
             }
             return patientList;

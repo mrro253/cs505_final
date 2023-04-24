@@ -176,10 +176,10 @@ public class API {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getVaxPatients( @PathParam("mrn") int mrn) {
         try {
-            List<Integer> patients1 = db.getPatientsStatus1(mrn);
-            List<Integer> patients2 = db.getPatientsStatus2(mrn);
-            List<Integer> patients3 = db.getPatientsStatus3(mrn);
-            List<Integer> vaxPatients1 = db.getVaxPatientStatus1();
+            List<String> patients1 = db.getPatientsStatus1(mrn);
+            List<String> patients2 = db.getPatientsStatus2(mrn);
+            List<String> patients3 = db.getPatientsStatus3(mrn);
+            List<String> vaxPatients1 = db.getVaxPatientStatus1();
             double total1 = 0.00;
             double total2 = 0.00;
             double total3 = 0.00;
@@ -188,21 +188,21 @@ public class API {
             
                 for (int i = 0; i < patients1.size(); i++) {
                     for (int j = 0; i < vaxPatients1.size(); j++) {
-                        if (vaxPatients1.get(i) == patients1.get(i)) {
+                        if (vaxPatients1.get(j) == patients1.get(i)) {
                             total1 = total1 + 1;
                         }  
                     }
                 }
                 for (int i = 0; i < patients2.size(); i++) {
                     for (int j = 0; i < vaxPatients1.size(); j++) {
-                        if (vaxPatients1.get(i) == patients2.get(i)) {
+                        if (vaxPatients1.get(j) == patients2.get(i)) {
                             total2 = total2 + 1;
                         }  
                     }
                 }
                 for (int i = 0; i < patients3.size(); i++) {
                     for (int j = 0; i < vaxPatients1.size(); j++) {
-                        if (vaxPatients1.get(i) == patients3.get(i)) {
+                        if (vaxPatients1.get(j) == patients3.get(i)) {
                             total3 = total3 + 1;
                         }  
                     }
@@ -220,7 +220,7 @@ public class API {
                 responseMap.put("in-patient_count", count1);
                 responseMap.put("in-patient_vax", percent1);
                 responseMap.put("icu-patient_count", count2);
-                responseMap.put("icu_patient_vax", percent2);
+                responseMap.put("icu-patient_vax", percent2);
                 responseMap.put("patient_vent_count", count3);
                 responseMap.put("patient_vent_count", percent3);
                 return Response.ok(gson.toJson(responseMap)).build();
@@ -229,7 +229,7 @@ public class API {
                 responseMap.put("in-patient_count", 0);
                 responseMap.put("in-patient_vax", 0);
                 responseMap.put("icu-patient_count", 0);
-                responseMap.put("icu_patient_vax", 0);
+                responseMap.put("icu-patient_vax", 0);
                 responseMap.put("patient_vent_count", 0);
                 responseMap.put("patient_vent_count", 0);
                 return Response.ok(gson.toJson(responseMap)).build();
@@ -277,10 +277,10 @@ public class API {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllVax() {
         try {
-            List<Integer> patients1 = db.getPatientsStatusTotal1();
-            List<Integer> patients2 = db.getPatientsStatusTotal2();
-            List<Integer> patients3 = db.getPatientsStatusTotal3();
-            List<Integer> vaxPatients1 = db.getVaxPatientStatus1();
+            List<String> patients1 = db.getPatientsStatusTotal1();
+            List<String> patients2 = db.getPatientsStatusTotal2();
+            List<String> patients3 = db.getPatientsStatusTotal3();
+            List<String> vaxPatients1 = db.getVaxPatientStatus1();
             double total1 = 0.00;
             double total2 = 0.00;
             double total3 = 0.00;
@@ -289,21 +289,21 @@ public class API {
             
                 for (int i = 0; i < patients1.size(); i++) {
                     for (int j = 0; i < vaxPatients1.size(); j++) {
-                        if (vaxPatients1.get(i) == patients1.get(i)) {
+                        if (vaxPatients1.get(j) == patients1.get(i)) {
                             total1 = total1 + 1;
                         }  
                     }
                 }
                 for (int i = 0; i < patients2.size(); i++) {
                     for (int j = 0; i < vaxPatients1.size(); j++) {
-                        if (vaxPatients1.get(i) == patients2.get(i)) {
+                        if (vaxPatients1.get(j) == patients2.get(i)) {
                             total2 = total2 + 1;
                         }  
                     }
                 }
                 for (int i = 0; i < patients3.size(); i++) {
                     for (int j = 0; i < vaxPatients1.size(); j++) {
-                        if (vaxPatients1.get(i) == patients3.get(i)) {
+                        if (vaxPatients1.get(j) == patients3.get(i)) {
                             total3 = total3 + 1;
                         }
                     }
@@ -321,7 +321,7 @@ public class API {
                 responseMap.put("in-patient_count", count1);
                 responseMap.put("in-patient_vax", percent1);
                 responseMap.put("icu-patient_count", count2);
-                responseMap.put("icu_patient_vax", percent2);
+                responseMap.put("icu-patient_vax", percent2);
                 responseMap.put("patient_vent_count", count3);
                 responseMap.put("patient_vent_count", percent3);
                 return Response.ok(gson.toJson(responseMap)).build();
@@ -330,7 +330,7 @@ public class API {
                 responseMap.put("in-patient_count", 0);
                 responseMap.put("in-patient_vax", 0);
                 responseMap.put("icu-patient_count", 0);
-                responseMap.put("icu_patient_vax", 0);
+                responseMap.put("icu-patient_vax", 0);
                 responseMap.put("patient_vent_count", 0);
                 responseMap.put("patient_vent_count", 0);
                 return Response.ok(gson.toJson(responseMap)).build();
@@ -369,40 +369,4 @@ public class API {
         }
     }
 
-    // @GET
-    // @Path("/getaccesscount")
-    // @Produces(MediaType.APPLICATION_JSON)
-    // public Response getAccessCount(@HeaderParam("X-Auth-API-Key") String authKey) {
-    //     String responseString = "{}";
-    //     try {
-
-    //         //get remote ip address from request
-    //         String remoteIP = request.get().getRemoteAddr();
-    //         //get the timestamp of the request
-    //         long access_ts = System.currentTimeMillis();
-    //         System.out.println("IP: " + remoteIP + " Timestamp: " + access_ts);
-
-    //         //generate event based on access
-    //         String inputEvent = gson.toJson(new accessRecord(remoteIP,access_ts));
-    //         System.out.println("inputEvent: " + inputEvent);
-
-    //         //send input event to CEP
-    //         Launcher.cepEngine.input(Launcher.inputStreamName, inputEvent);
-
-    //         //generate a response
-    //         Map<String,String> responseMap = new HashMap<>();
-    //         responseMap.put("accesscoint",String.valueOf(Launcher.accessCount));
-    //         responseString = gson.toJson(responseMap);
-
-    //     } catch (Exception ex) {
-
-    //         StringWriter sw = new StringWriter();
-    //         ex.printStackTrace(new PrintWriter(sw));
-    //         String exceptionAsString = sw.toString();
-    //         ex.printStackTrace();
-
-    //         return Response.status(500).entity(exceptionAsString).build();
-    //     }
-    //     return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
-    // }
 }
