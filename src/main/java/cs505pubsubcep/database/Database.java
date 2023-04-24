@@ -28,12 +28,14 @@ public class Database {
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmt = conn.createStatement();
         ) {
-            String sql = "DELETE FROM hospital_list;"
-                        +"DELETE FROM kyzipdetails;"
-                        +"DELETE FROM patient_list;"
-                        +"DELETE FROM alert_zipcodes;"
-                        +"DELETE FROM vax_list;";
-            stmt.executeUpdate(sql);
+            String[] sqlStatememnts = {"DELETE FROM hospital_list;",
+                                       "DELETE FROM kyzipdetails;",
+                                       "DELETE FROM patient_list;",
+                                       "DELETE FROM alert_zipcodes;",
+                                       "DELETE FROM vax_list;"};
+            for (String sql : sqlStatememnts) {
+                stmt.executeUpdate(sql);
+            }
             System.out.println("Resetting database.");
             return true;
         } catch (SQLException e) {
@@ -46,7 +48,11 @@ public class Database {
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmt = conn.createStatement();
         ) {
-            String sql = "INSERT INTO patient_list VALUES ("
+            String sql = "";
+            if (newPatient.getPatientStatus() == 1) {
+                sql = "INSERT INTO alert_patients VALUES (" + batchNum + ", '" + newPatient.getPatientMRN() + "', " + newPatient.getPatientZipCode() + ");";
+            } else {
+                sql = "INSERT INTO patient_list VALUES ("
                         + Integer.toString(newPatient.getTestingID()) + ", '"
                         + newPatient.getPatientMRN() + "', '"
                         + newPatient.getPatientName() + "', "
@@ -56,6 +62,7 @@ public class Database {
                         + newPatient.getEventList() + "', " 
                         + batchNum
                         + ");";
+            }
             System.out.println("Query: " + sql);
             stmt.executeUpdate(sql);
             System.out.println("Inserting new patient.");
@@ -147,29 +154,23 @@ public class Database {
         }
     }
 
-    public void updateAlertZips() {
+    public void updateAlertZips(int batchnum) {
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              Statement stmt = conn.createStatement();
         ) {
-            ResultSet rs = stmt.executeQuery("SELECT batch AS batchnum FROM patient_list ORDER BY BATCH DESC LIMIT 1;");
-            if (rs.next()) {
-                int currentBatch = rs.getInt("batchnum");
-                int prevBatch = currentBatch-1;
-
-                // Calculate growth rate for each zipcode over two batches
-                String sql = "SELECT patientzip, COUNT(*) AS count FROM alert_patients WHERE batchnum = " + currentBatch + " GROUP BY patientzip;";
-                ResultSet rs2 = stmt.executeQuery(sql);
-                while (rs2.next()) {
-                    int zipCode = rs2.getInt("patientzip");
-                    int currentCount = rs2.getInt("count");
-                    int prevCount = getZipCountForBatch(zipCode, prevBatch);
-                    if (prevCount > 0 && currentCount > prevCount * 2) {
-                        // Set alert status for this zip
-                        setZipAlertStatus(zipCode, true);
-                    } else {
-                        // Clear alert status for this zip
-                        setZipAlertStatus(zipCode, false);
-                    }
+            int prevBatch = batchnum-1;
+            String sql = "SELECT patientzip, COUNT(*) AS count FROM alert_patients WHERE batchnum = " + batchnum + " GROUP BY patientzip;";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                int zipCode = rs.getInt("patientzip");
+                int currentCount = rs.getInt("count");
+                int prevCount = getZipCountForBatch(zipCode, prevBatch);
+                if (prevCount > 0 && currentCount > prevCount * 2) {
+                    // Set alert status for this zip
+                    setZipAlertStatus(zipCode, true);
+                } else {
+                    // Clear alert status for this zip
+                    setZipAlertStatus(zipCode, false);
                 }
             }
         } catch (SQLException e) {
@@ -212,7 +213,6 @@ public class Database {
                 zipList.add(Integer.toString(zipCode));
             }
         updateAlertState();
-        updateAlertZips();
         return zipList;
         } catch (SQLException e) {
             e.printStackTrace();
