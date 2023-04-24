@@ -147,6 +147,60 @@ public class Database {
         }
     }
 
+    public void updateAlertZips() {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = conn.createStatement();
+        ) {
+            ResultSet rs = stmt.executeQuery("SELECT batch AS batchnum FROM patient_list ORDER BY BATCH DESC LIMIT 1;");
+            if (rs.next()) {
+                int currentBatch = rs.getInt("batchnum");
+                int prevBatch = currentBatch-1;
+
+                // Calculate growth rate for each zipcode over two batches
+                String sql = "SELECT patientzip, COUNT(*) AS count FROM alert_patients WHERE batchnum = " + currentBatch + " GROUP BY patientzip;";
+                ResultSet rs2 = stmt.executeQuery(sql);
+                while (rs2.next()) {
+                    int zipCode = rs2.getInt("patientzip");
+                    int currentCount = rs2.getInt("count");
+                    int prevCount = getZipCountForBatch(zipCode, prevBatch);
+                    if (prevCount > 0 && currentCount > prevCount * 2) {
+                        // Set alert status for this zip
+                        setZipAlertStatus(zipCode, true);
+                    } else {
+                        // Clear alert status for this zip
+                        setZipAlertStatus(zipCode, false);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Get count of positive patients for a given zipcode and batch number
+    private int getZipCountForBatch(int zipCode, int batchNum) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) AS count FROM alert_patients WHERE batchnum = ? AND patientzip = ? AND patientstatus = 1;");) {
+            stmt.setInt(1, batchNum);
+            stmt.setInt(2, zipCode);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    private void setZipAlertStatus(int zipCode, boolean isAlert) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("UPDATE alert_zipcodes SET alert = ? WHERE zipcode = ?;");) {
+            stmt.setBoolean(1, isAlert);
+            stmt.setInt(2, zipCode);
+            stmt.executeUpdate();
+        }
+    }
+
     public List<String> getAlertZipcodes() {
         List<String> zipList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -158,6 +212,7 @@ public class Database {
                 zipList.add(Integer.toString(zipCode));
             }
         updateAlertState();
+        updateAlertZips();
         return zipList;
         } catch (SQLException e) {
             e.printStackTrace();

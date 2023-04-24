@@ -129,13 +129,13 @@ public class API {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getZipAlertList() {
         try {
-            List<String> counts = db.getAlertZipcodes();
-            if (counts != null && !counts.isEmpty()) {
+            List<String> zips = db.getAlertZipcodes();
+            if (zips != null && !zips.isEmpty()) {
                 Map<String, Object> responseMap = new HashMap<>();
-                responseMap.put("ziplist", counts);
+                responseMap.put("ziplist", zips);
                 return Response.ok(gson.toJson(responseMap)).build();
             } else {
-                return Response.ok("{\"ziplist\": [40602]}").build();
+                return Response.ok("{\"ziplist\": []}").build();
             }
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
