@@ -222,7 +222,7 @@ public class API {
                 responseMap.put("icu-patient_count", count2);
                 responseMap.put("icu_patient_vax", percent2);
                 responseMap.put("patient_vent_count", count3);
-                responseMap.put("patient_vent_count", percent3);
+                responseMap.put("patient_vent_vax", percent3);
                 return Response.ok(gson.toJson(responseMap)).build();
             } else {
                 Map<String, Object> responseMap = new HashMap<>();
@@ -231,7 +231,7 @@ public class API {
                 responseMap.put("icu-patient_count", 0);
                 responseMap.put("icu_patient_vax", 0);
                 responseMap.put("patient_vent_count", 0);
-                responseMap.put("patient_vent_count", 0);
+                responseMap.put("patient_vent_vax", 0);
                 return Response.ok(gson.toJson(responseMap)).build();
             }
         } catch (Exception ex) {
@@ -323,7 +323,7 @@ public class API {
                 responseMap.put("icu-patient_count", count2);
                 responseMap.put("icu_patient_vax", percent2);
                 responseMap.put("patient_vent_count", count3);
-                responseMap.put("patient_vent_count", percent3);
+                responseMap.put("patient_vent_vax", percent3);
                 return Response.ok(gson.toJson(responseMap)).build();
             } else {
                 Map<String, Object> responseMap = new HashMap<>();
@@ -332,7 +332,7 @@ public class API {
                 responseMap.put("icu-patient_count", 0);
                 responseMap.put("icu_patient_vax", 0);
                 responseMap.put("patient_vent_count", 0);
-                responseMap.put("patient_vent_count", 0);
+                responseMap.put("patient_vent_vax", 0);
                 return Response.ok(gson.toJson(responseMap)).build();
             }
         }
