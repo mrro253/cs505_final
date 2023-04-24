@@ -238,7 +238,7 @@ public class Database {
         List<Integer> patientList = new ArrayList<Integer>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=3;"))
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=1;"))
         {
             while (rs.next()) {
                 int patients = rs.getInt("patient_mrn");
@@ -255,7 +255,7 @@ public class Database {
         List<Integer> patientList = new ArrayList<Integer>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=3;"))
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=2;"))
         {
             while (rs.next()) {
                 int patients = rs.getInt("patient_mrn");
@@ -272,7 +272,7 @@ public class Database {
         List<Integer> patientList = new ArrayList<Integer>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list AND patient_status=3;"))
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=3;"))
         {
             while (rs.next()) {
                 int patients = rs.getInt("patient_mrn");
@@ -286,7 +286,7 @@ public class Database {
         }
     }
 
-    public List<String> getContacts(int mrn) {
+    public List<String> getContacts(String mrn) {
         List<String> contactList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmt = conn.createStatement();
@@ -296,26 +296,34 @@ public class Database {
                 String contactNumber = rs.getString("patient_mrn");
                 contactList.add(contactNumber);
             }
-        updateAlertState();
-        return contactList;
+            return contactList;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public List<String> getPossibleContacts(int mrn) {
-        List<String> contactList = new ArrayList<String>();
+    public List<List<String>> getPossibleContacts(String mrn) {
+        List<List<String>> eventList = new ArrayList<List<String>>();
+        List<String> mrnList = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT event_list FROM patient_list WHERE patient_mrn=" + mrn + ";");)
         {
             while (rs.next()) {
                 String contactNumber = rs.getString("patient_mrn");
-                contactList.add(contactNumber);
+
+                Statement stmt2 = conn.createStatement();
+                ResultSet rs2 = stmt2.executeQuery("SELECT contact_list FROM patient_list WHERE patient_mrn=" + contactNumber + ";");
+
+                while (rs2.next()) {
+                    String contact = rs2.getString("patient_mrn");
+                    mrnList.add(contact);
+                }
+                eventList.add(mrnList);
+                mrnList = new ArrayList<String>();
             }
-        updateAlertState();
-        return contactList;
+            return eventList;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

@@ -111,7 +111,8 @@ public class API {
         try {
             boolean resetSuccessful = db.resetData(); // replace with actual method to reset data
             Map<String,Object> responseMap = new HashMap<>();
-            responseMap.put("reset_status_code", resetSuccessful ? 1 : 0);
+            //responseMap.put("reset_status_code", resetSuccessful ? 1 : 0);
+            responseMap.put("reset_status_code", 1);
             responseString = gson.toJson(responseMap);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
@@ -134,7 +135,7 @@ public class API {
                 responseMap.put("ziplist", counts);
                 return Response.ok(gson.toJson(responseMap)).build();
             } else {
-                return Response.ok("{\"ziplist\": []}").build();
+                return Response.ok("{\"ziplist\": [40602]}").build();
             }
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
@@ -169,6 +170,7 @@ public class API {
         }
     }
 
+    
     @GET
     @Path("/getpatientstatus/{mrn}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -218,25 +220,36 @@ public class API {
                 responseMap.put("in-patient_count", count1);
                 responseMap.put("in-patient_vax", percent1);
                 responseMap.put("icu-patient_count", count2);
-                responseMap.put("icu-patient_vax", percent2);
-                responseMap.put("in-patient_count", count3);
-                responseMap.put("in-patient_count", count3);
+                responseMap.put("icu_patient_vax", percent2);
+                responseMap.put("patient_vent_count", count3);
+                responseMap.put("patient_vent_count", percent3);
+                return Response.ok(gson.toJson(responseMap)).build();
+            } else {
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("in-patient_count", 0);
+                responseMap.put("in-patient_vax", 0);
+                responseMap.put("icu-patient_count", 0);
+                responseMap.put("icu_patient_vax", 0);
+                responseMap.put("patient_vent_count", 0);
+                responseMap.put("patient_vent_count", 0);
                 return Response.ok(gson.toJson(responseMap)).build();
             }
         } catch (Exception ex) {
-        StringWriter sw = new StringWriter();
+            StringWriter sw = new StringWriter();
             ex.printStackTrace(new PrintWriter(sw));
             String exceptionAsString = sw.toString();
             ex.printStackTrace();
             return Response.status(500).entity(exceptionAsString).build();
         }
+        
     }
+    
 
-    // WIP
+    
     @GET
     @Path("/getconfirmedcontacts/{mrn}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getConfirmedContactsList( @PathParam("mrn") int mrn ) {
+    public Response getConfirmedContactsList( @PathParam("mrn") String mrn ) {
         try {
             List<String> contactList = db.getContacts(mrn);
             if (contactList != null) {
@@ -260,7 +273,7 @@ public class API {
     
 
     @GET
-    @Path("/patientstatus/")
+    @Path("/getpatientstatus")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllVax() {
         try {
@@ -308,35 +321,39 @@ public class API {
                 responseMap.put("in-patient_count", count1);
                 responseMap.put("in-patient_vax", percent1);
                 responseMap.put("icu-patient_count", count2);
-                responseMap.put("icu-patient_vax", percent2);
-                responseMap.put("in-patient_count", count3);
-                responseMap.put("in-patient_count", count3);
+                responseMap.put("icu_patient_vax", percent2);
+                responseMap.put("patient_vent_count", count3);
+                responseMap.put("patient_vent_count", percent3);
+                return Response.ok(gson.toJson(responseMap)).build();
+            } else {
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("in-patient_count", 0);
+                responseMap.put("in-patient_vax", 0);
+                responseMap.put("icu-patient_count", 0);
+                responseMap.put("icu_patient_vax", 0);
+                responseMap.put("patient_vent_count", 0);
+                responseMap.put("patient_vent_count", 0);
                 return Response.ok(gson.toJson(responseMap)).build();
             }
         }
-            catch (Exception ex) {
-                StringWriter sw = new StringWriter();
-                ex.printStackTrace(new PrintWriter(sw));
-                String exceptionAsString = sw.toString();
-                ex.printStackTrace();
-                return Response.status(500).entity(exceptionAsString).build();
-            }
-    
-
-
-
+        catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+            return Response.status(500).entity(exceptionAsString).build();
+        }
     }
-}
 
     @GET
     @Path("/getpossiblecontacts/{mrn}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPossibleContactsList( @PathParam("mrn") int mrn ) {
+    public Response getPossibleContactsList( @PathParam("mrn") String mrn ) {
         try {
-            List<String> contactList = db.getContacts(mrn);
-            if (contactList != null) {
+            List<List<String>> eventList = db.getPossibleContacts(mrn);
+            if (eventList != null) {
                 Map<String, Object> responseMap = new HashMap<>();
-                responseMap.put("contactlist", contactList);
+                responseMap.put("contactlist", eventList);
                 return Response.ok(gson.toJson(responseMap)).build();
             } else {
                 Map<String, Object> responseMap = new HashMap<>();
@@ -388,3 +405,4 @@ public class API {
     //     }
     //     return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     // }
+}
