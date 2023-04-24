@@ -102,6 +102,7 @@ public class TopicConnector {
                     List<String> counts = db.getZipCodeCounts(patientBatchCount);
                     if (counts != null && !counts.isEmpty()) {
                         System.out.println("NOT NULL NOR EMPTY......");
+                        db.updateAlertZips();
                     }
                 }
                 //List<Map<String,String>> incomingList = gson.fromJson(message, typeOf);
