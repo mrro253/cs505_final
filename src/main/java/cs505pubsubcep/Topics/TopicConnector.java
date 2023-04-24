@@ -99,10 +99,8 @@ public class TopicConnector {
                     System.out.println("\tcontact_list = " + testingData.contact_list);
                     System.out.println("\tevent_list = " + testingData.event_list);
                     db.addPatient(patient, patientBatchCount);
-                    List<String> counts = db.getZipCodeCounts(patientBatchCount);
-                    if (counts != null && !counts.isEmpty()) {
-                        System.out.println("NOT NULL NOR EMPTY......");
-                    }
+                    db.updateAlertState();
+                    db.updateAlertZips();
                 }
                 //List<Map<String,String>> incomingList = gson.fromJson(message, typeOf);
                 //for(Map<String,String> map : incomingList) {
