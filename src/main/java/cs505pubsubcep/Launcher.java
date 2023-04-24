@@ -18,7 +18,8 @@ import java.util.Map;
 public class Launcher {
 
     public static final String API_SERVICE_KEY = "12352407"; //Change this to your student id
-    public static final int WEB_PORT = 8082;
+    // public static final int WEB_PORT = 8082;
+    public static final int WEB_PORT = 9999;
     public static String inputStreamName = null;
     public static long accessCount = -1;
 
@@ -94,6 +95,15 @@ public class Launcher {
             System.out.println("Web Server Started...");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static int isAppOnline() {
+        int check = topicConnector.isOnline();
+        if (check == 1) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 

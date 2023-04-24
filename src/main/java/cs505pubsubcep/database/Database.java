@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.*;
 
 import cs505pubsubcep.Topics.Patient;
+import cs505pubsubcep.Topics.HospitalData;
+import cs505pubsubcep.Topics.VaxData;
 
 public class Database {
     static final String DB_URL = "jdbc:mysql://localhost:3306/cs505final";
@@ -59,6 +61,41 @@ public class Database {
             System.out.println("Inserting new patient.");
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    public void addHospital(HospitalData newHospital, int batchNum) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+        ) {
+            String sql = "INSERT INTO hospital_list VALUES ("
+            + Integer.toString(newHospital.getHospitalID()) + ", '"
+            + newHospital.getPatientName() + "', '"
+            + newHospital.getPatientMRN() + "', '"
+            + newHospital.getPatientStatus() + "', '"
+            + batchNum
+            + ");";
+        System.out.println("Query: " + sql);
+        stmt.executeUpdate(sql);
+        System.out.println("Inserting new hospital data.");
+        }  catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void addVax(VaxData newVax, int batchNum) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+        ) {
+            String sql = "INSERT INTO vax_list VALUES ("
+            + Integer.toString(newVax.getVaccinationID()) + ", '"
+            + newVax.getPatientName() + "', '"
+            + newVax.getPatientMRN() + "', '"
+            + batchNum
+            + ");";
+            System.out.println("Query: " + sql);
+            stmt.executeUpdate(sql);
+            System.out.println("Inserting new vax data.");
+        }  catch(SQLException e) {
+                e.printStackTrace();
         }
     }
 
@@ -127,4 +164,170 @@ public class Database {
             return null;
         }
     }
+
+    public List<String> getVaxPatientStatus1() {
+        List<String> vaxList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM vax_list;"))
+        {
+            while (rs.next()) {
+                String vaxPatient = rs.getString("patient_mrn");
+                vaxList.add((vaxPatient));
+            }
+            return vaxList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+    public List<String> getPatientsStatus1(int hospital_id) {
+        List<String> patientList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE hospital_id=" + hospital_id + " AND patient_status=1;"))
+        {
+            while (rs.next()) {
+                String patients = rs.getString("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<String> getPatientsStatus2(int hospital_id) {
+        List<String> patientList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE hospital_id=" + hospital_id + " AND patient_status=2;"))
+        {
+            while (rs.next()) {
+                String patients = rs.getString("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<String> getPatientsStatus3(int hospital_id) {
+        List<String> patientList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE hospital_id=" + hospital_id + " AND patient_status=3;"))
+        {
+            while (rs.next()) {
+                String patients = rs.getString("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<String> getPatientsStatusTotal1() {
+        List<String> patientList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=1;"))
+        {
+            while (rs.next()) {
+                String patients = rs.getString("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<String> getPatientsStatusTotal2() {
+        List<String> patientList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=2;"))
+        {
+            while (rs.next()) {
+                String patients = rs.getString("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<String> getPatientsStatusTotal3() {
+        List<String> patientList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT patient_mrn FROM hospital_list WHERE patient_status=3;"))
+        {
+            while (rs.next()) {
+                String patients = rs.getString("patient_mrn");
+                patientList.add((patients));
+            }
+            return patientList;
+        }
+        catch (SQLException e) {
+        e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<String> getContacts(String mrn) {
+        List<String> contactList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT contact_list FROM patient_list WHERE patient_mrn=" + mrn + ";");)
+        {
+            while (rs.next()) {
+                String contactNumber = rs.getString("patient_mrn");
+                contactList.add(contactNumber);
+            }
+            return contactList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<List<String>> getPossibleContacts(String mrn) {
+        List<List<String>> eventList = new ArrayList<List<String>>();
+        List<String> mrnList = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT event_list FROM patient_list WHERE patient_mrn=" + mrn + ";");)
+        {
+            while (rs.next()) {
+                String contactNumber = rs.getString("patient_mrn");
+
+                Statement stmt2 = conn.createStatement();
+                ResultSet rs2 = stmt2.executeQuery("SELECT contact_list FROM patient_list WHERE patient_mrn=" + contactNumber + ";");
+
+                while (rs2.next()) {
+                    String contact = rs2.getString("patient_mrn");
+                    mrnList.add(contact);
+                }
+                eventList.add(mrnList);
+                mrnList = new ArrayList<String>();
+            }
+            return eventList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
+
