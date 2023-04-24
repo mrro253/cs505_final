@@ -111,8 +111,8 @@ public class API {
         try {
             boolean resetSuccessful = db.resetData(); // replace with actual method to reset data
             Map<String,Object> responseMap = new HashMap<>();
-            //responseMap.put("reset_status_code", resetSuccessful ? 1 : 0);
-            responseMap.put("reset_status_code", 1);
+            responseMap.put("reset_status_code", resetSuccessful ? 1 : 0);
+            //responseMap.put("reset_status_code", 1);
             responseString = gson.toJson(responseMap);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
