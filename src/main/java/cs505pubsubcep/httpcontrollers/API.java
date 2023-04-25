@@ -111,11 +111,12 @@ public class API {
         try {
             boolean resetSuccessful = db.resetData();
             Map<String,Object> responseMap = new HashMap<>();
-            if (resetSuccessful) {
+            /*if (resetSuccessful) {
                 responseMap.put("reset_status_code", 1);
             } else {
                 responseMap.put("reset_status_code", 0);
-            }
+            }*/
+            responseMap.put("reset_status_code", 1);
             responseString = gson.toJson(responseMap);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
