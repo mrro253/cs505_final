@@ -28,14 +28,19 @@ public class Database {
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmt = conn.createStatement();
         ) {
-            String[] sqlStatememnts = {"DELETE FROM hospital_list;",
+            stmt.executeUpdate("DELETE FROM hospital_list;");
+            stmt.executeUpdate("DELETE FROM kyzipdetails;");
+            stmt.executeUpdate("DELETE FROM patient_list;");
+            stmt.executeUpdate("DELETE FROM alert_zipcodes;");
+            stmt.executeUpdate("DELETE FROM vax_list;");
+            /*String[] sqlStatememnts = {"DELETE FROM hospital_list;",
                                        "DELETE FROM kyzipdetails;",
                                        "DELETE FROM patient_list;",
                                        "DELETE FROM alert_zipcodes;",
                                        "DELETE FROM vax_list;"};
             for (String sql : sqlStatememnts) {
                 stmt.executeUpdate(sql);
-            }
+            }*/
             System.out.println("Resetting database.");
             return true;
         } catch (SQLException e) {
